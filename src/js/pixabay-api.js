@@ -23,11 +23,6 @@ export async function searchImages(searchImage, page = 1, perPage = 40) {
     const response = await axios.get(url);
     return response;
   } catch (error) {
-    iziToast.error({
-      title: 'Error',
-      message: 'Something went wrong. Try again!',
-      position: 'topRight',
-    });
     console.error('Error fetching images:', error);
     return null;
   }

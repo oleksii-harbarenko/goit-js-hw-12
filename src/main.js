@@ -9,6 +9,7 @@ const input = document.querySelector('.search-input');
 const waitMessage = document.querySelector('.wait-message');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more-btn');
+const loadMoreMessage = document.querySelector('.load-more-message');
 
 let searchImage = '';
 let currentPage = 1;
@@ -35,6 +36,15 @@ form.addEventListener('submit', async e => {
 
   try {
     const response = await searchImages(searchImage, currentPage);
+    if (!response) {
+      iziToast.error({
+        title: 'Error',
+        message: 'Something went wrong. Please try again',
+        position: 'topRight',
+      });
+      return;
+    }
+
     totalHits = response.data.totalHits;
 
     if (response.data.hits.length === 0) {
@@ -65,8 +75,9 @@ form.addEventListener('submit', async e => {
 
 loadMoreBtn.addEventListener('click', async () => {
   currentPage += 1;
-  waitMessage.innerHTML =
+  loadMoreMessage.innerHTML =
     'Loading more images, please wait...<span class="loader"></span>';
+  loadMoreBtn.disabled = true;
 
   try {
     const response = await searchImages(searchImage, currentPage);
@@ -96,6 +107,7 @@ loadMoreBtn.addEventListener('click', async () => {
     });
     console.log(error);
   } finally {
-    waitMessage.textContent = '';
+    loadMoreMessage.textContent = '';
+    loadMoreBtn.disabled = false;
   }
 });
